@@ -50,7 +50,7 @@ class BLBL(object):
         print(video_name)
         # 获取视频链接
         download_url = re.search(r'("url":"|"baseUrl":"|"backupUrl":\[")(.+?)("|"])', html, re.S).group(2)
-        print(download_url,111)
+        print(download_url, 111)
         # 获取主机信息
         host = re.search(r'//(.+\.com)', download_url, re.S).group(1)
         print(host)
@@ -80,8 +80,8 @@ class BLBL(object):
             '171.12.176.88:21839',
             '125.105.49.23:20986'
              ]
-        proxies = {'http':a[random.randint(0,len(a)-1)],
-                   "https":a[random.randint(0,len(a)-1)]}
+        proxies = {'http': a[random.randint(0, len(a)-1)],
+                   "https": a[random.randint(0, len(a)-1)]}
         # 获取视频资源,并写入文件
         with open(video_name, 'wb') as f:
             f.write(requests.get(download_url, headers=download_headers, stream=True, verify=False).content)
