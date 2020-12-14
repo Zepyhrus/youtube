@@ -6,18 +6,14 @@ import os
 from os.path import join, split, basename
 import requests
 
-
-
-
-
 def find_url(num):
   print('开始爬取页面数量')
   left = 0
-  mid = 20    # original 80000
-  right = 40  # original 160000, 这三个数据定义的目的是
+  mid = 80000    # original 80000
+  right = 160000  # original 160000, 这三个数据定义的目的是
   p = mid
 
-  for k in range(20):
+  for k in range(50000):
     time.sleep(0.2)
     dis = right - left
     _u = f'https://api.bilibili.com/x/web-interface/newlist?&rid={num}&type=0&pn={p}&ps=50&jsonp=jsonp'
@@ -46,7 +42,7 @@ def find_url(num):
   Url_Pool = []
 
   for m in range(0, p):
-    url = "https://api.bilibili.com/x/web-interface/newlist?&rid={}&type=0&pn={}&ps=50&jsonp=jsonp".format(num, m)
+    url = f"https://api.bilibili.com/x/web-interface/newlist?&rid={num}&type=0&pn={m}&ps=50&jsonp=jsonp"
     Url_Pool.append(url)
   print('--URL池生成结束--')
 
@@ -54,8 +50,10 @@ def find_url(num):
   return Url_Pool
 
 
-
 if __name__ == "__main__":
-  pool = find_url(10)
+  _u = 'https://www.bilibili.com/v/life'
+  _r = requests.get(_u)
 
-  print(pool)
+  _r.encoding = _r.apparent_encoding
+
+  print(_r.text)
