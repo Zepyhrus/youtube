@@ -79,7 +79,7 @@ class BLBL(object):
             '117.81.173.226:17273',
             '171.12.176.88:21839',
             '125.105.49.23:20986'
-             ]
+            ]
         proxies = {'http': a[random.randint(0, len(a)-1)],
                    "https": a[random.randint(0, len(a)-1)]}
         # 获取视频资源,并写入文件
