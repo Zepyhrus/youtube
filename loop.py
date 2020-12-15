@@ -6,6 +6,7 @@ import random
 import logging
 
 from bs4 import BeautifulSoup
+import youtube_dl
 
 
 
@@ -57,6 +58,9 @@ if __name__ == "__main__":
   blbl = BLBL(init_url, init_refer)
   links = []
   max_size = 10000
+  ydl_opts = {
+
+  }
 
 
   # loop here
@@ -81,11 +85,12 @@ if __name__ == "__main__":
     try:
       new_url, new_refer = random.choice(links)
       print(f'Ready to download: {new_url}')
-      cmd = f'youtube-dl -f 0 {new_url}'
-      os.system(cmd)
+      
+      with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([new_url])
       blbl = BLBL(new_url, new_refer)
     except:
-      with open(f'{random.randint(1e6)}.html', 'w', encoding='utf-8') as f:
+      with open(f'{random.randint(0, 1e6)}.html', 'w', encoding='utf-8') as f:
         f.write(blbl.html)
       
       print('error here!')
