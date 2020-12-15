@@ -1,3 +1,19 @@
 {
-  "python.pythonPath": "D:\\anaconda3\\envs\\youtube\\python.exe"
+  "python.pythonPath": "D:\\anaconda3\\envs\\youtube\\python.exe",
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/*/**": true,
+    "**/.hg/store/**": true,
+    "**/audios/**": true
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/*.flv": true,
+    "**/*.part": true
+  }
 }
