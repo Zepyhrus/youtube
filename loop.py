@@ -4,9 +4,10 @@ import requests
 import re
 import random
 import logging
-import json
 
 from bs4 import BeautifulSoup
+
+
 
 
 
@@ -44,37 +45,60 @@ class BLBL:
 
     return html
 
-  def info(self, html):
-    soup = BeautifulSoup(html)
-
-  def video(self, html):
-    # get video name, download url and host
-    pass
-
 
 
 if __name__ == "__main__":
   init_url = "https://www.bilibili.com/video/BV1PJ411Y7EG"
   init_refer = "https://www.bilibili.com/video/BV1PJ411Y7EG?from=search&seid=16370838628940058696"
   host = 'https://www.bilibili.com'
-  loop = False
+  loop = True
 
 
   blbl = BLBL(init_url, init_refer)
+  links = []
+  max_size = 10000
 
-  soup = BeautifulSoup(blbl.html, 'lxml')
 
-  scripts = soup.find_all('script')
+  # loop here
+  while loop:
+    soup = BeautifulSoup(blbl.html, 'lxml')
 
-  for script in scripts:
-    if len(script.contents):
-      _cont = script.contents[0]
+    for _a in soup.find_all('a'):
+      if 'class' in _a.attrs and 'title' in _a.attrs['class']:
+        _href = _a.get('href')
+        _appex = _href.split('?')[0]
 
-      if '__playinfo__' in _cont:
-        _playinfo_ = json.loads(_cont.replace('window.__playinfo__=', ''))
-        _videoinfo_ = _playinfo_['data']['dash']
-        
-        
-        for _v in _videoinfo_:
-          pass
+        if 'video' not in _appex: continue
+
+        _url = host + _appex
+        _referer = host + _href
+
+        links.append((_url, _referer))
+
+        while len(links) >= max_size:
+          links.pop()
+
+    try:
+      new_url, new_refer = random.choice(links)
+      print(f'Ready to download: {new_url}')
+      cmd = f'youtube-dl -f 0 {new_url}'
+      os.system(cmd)
+      blbl = BLBL(new_url, new_refer)
+    except:
+      with open(f'{random.randint(1e6)}.html', 'w', encoding='utf-8') as f:
+        f.write(blbl.html)
+      
+      print('error here!')
+
+  
+
+  
+
+
+  
+
+
+
+
+
  

@@ -8,4 +8,6 @@ from bs4 import BeautifulSoup
 
 
 if __name__ == "__main__":
-  r = requests.get('https://www.cnblogs.com')
+  href = '/video/BV18J411U7nA/?spm_id_from=333.788.videocard.19'
+
+  pass
