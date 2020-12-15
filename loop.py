@@ -41,10 +41,7 @@ class BLBL:
     # request the website
     base_response = requests.get(self.base_url, headers=base_headers)
 
-    # get html
-    html = base_response.text
-
-    return html
+    return base_response.text
 
 
 
@@ -59,7 +56,7 @@ if __name__ == "__main__":
   links = []
   max_size = 10000
   ydl_opts = {
-
+    'retries': 5,
   }
 
 
@@ -91,10 +88,7 @@ if __name__ == "__main__":
       blbl = BLBL(new_url, new_refer)
     except:
       with open(f'{random.randint(0, 1e6)}.html', 'w', encoding='utf-8') as f:
-        f.write(blbl.html)
-      
-      print('error here!')
-
+        f.write(soup.prettify())
   
 
   

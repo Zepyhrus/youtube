@@ -1,3 +1,5 @@
+import os
+
 from moviepy.editor import AudioFileClip
 import hashlib
 from glob import glob
@@ -5,7 +7,11 @@ from glob import glob
 
 
 
+
 if __name__ == "__main__":
+  for _unfinished in glob('*.part'):
+    os.remove(_unfinished)
+
   for video_name in glob('*.flv'):
     clip = AudioFileClip(video_name)
 
