@@ -8,6 +8,8 @@ import logging
 from bs4 import BeautifulSoup
 import youtube_dl
 
+from configs import MAX_SIZE, YDL_OPTS
+
 
 
 
@@ -47,36 +49,25 @@ class BLBL:
 
 if __name__ == "__main__":
   init_url = "https://www.bilibili.com"
-  init_refer = "https://www.bilibili.com"
   host = 'https://www.bilibili.com'
   loop = True
 
 
-  blbl = BLBL(init_url, init_refer)
+  blbl = BLBL(init_url, init_url)
   soup = BeautifulSoup(blbl.html, 'lxml')
   links = ['https:' + _.get('href') for _ in soup.find_all('a') if 'href' in _.attrs and '/video/BV' in _.get('href')]
 
   print(links)
-  max_size = 10000
-  ydl_opts = {
-    'socket_timeout': 5,
-    'sleep_interval': 1,
-    'max_sleep_interval': 2,
-    'retries': 5,
-    'ratelimit': 1e5,   # 100k for debug on hotspot
-    'min_filesize': 1e5,
-    'max_filesize': 4e9
-  }
 
   while loop:
-    while len(links) >= max_size:
+    while len(links) >= MAX_SIZE:
       links.pop(0)  # empty
 
     new_url = random.choice(links)
     print(f'Ready to download: {new_url}...')
 
     try:
-      with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+      with youtube_dl.YoutubeDL(YDL_OPTS) as ydl:
         ydl.download([new_url])
     except Exception as err:
       print(err)

@@ -8,6 +8,8 @@ import logging
 from bs4 import BeautifulSoup
 import youtube_dl
 
+from configs import MAX_SIZE, YDL_OPTS
+
 
 
 
@@ -47,22 +49,6 @@ class BLBL:
 
 
 if __name__ == "__main__":
-  # # 访谈，最美中国字
-  # init_url = "https://www.bilibili.com/video/BV1ny4y1D7TU"
-  # init_refer = "https://www.bilibili.com/video/BV1ny4y1D7TU?spm_id_from=333.851.b_7265706f7274466972737431.8"
-
-  # # 游戏
-  # init_url = "https://www.bilibili.com/video/BV17i4y157au"
-  # init_refer = "https://www.bilibili.com/video/BV17i4y157au"
-
-  # # 鬼畜
-  # init_url = "https://www.bilibili.com/video/BV18a4y1a7hx"
-  # init_refer = "https://www.bilibili.com/video/BV18a4y1a7hx"
-
-  # # 恐怖游戏
-  # init_url = "https://www.bilibili.com/video/BV1vi4y157Pf"
-  # init_refer = "https://www.bilibili.com/video/BV1vi4y157Pf"
-
   # 救命
   init_url = "https://www.bilibili.com/video/BV1ka411A7HJ"
   init_refer = "https://www.bilibili.com/video/BV1ka411A7HJ"
@@ -74,18 +60,12 @@ if __name__ == "__main__":
 
   blbl = BLBL(init_url, init_refer)
   links = []
-  max_size = 10000
-  ydl_opts = {
-    'socket_timeout': 5,
-    'sleep_interval': 1,
-    'max_sleep_interval': 2,
-    'retries': 5,
-    'ratelimit': 10000000
-  }
-
 
   # loop here
   while loop:
+    while len(links) >= MAX_SIZE:
+      links.pop(0)
+    
     soup = BeautifulSoup(blbl.html, 'lxml')
 
     for _a in soup.find_all('a'):
@@ -100,23 +80,17 @@ if __name__ == "__main__":
 
         links.append((_url, _referer))
 
-        while len(links) >= max_size:
-          links.pop()
-
     # try:
     new_url, new_refer = random.choice(links)
     print(f'Ready to download: {new_url}')
     
     try:
-      with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+      with youtube_dl.YoutubeDL(YDL_OPTS) as ydl:
         ydl.download([new_url])
     except Exception as err:
       print(err)
 
     blbl = BLBL(new_url, new_refer)
-    # except:
-    #   with open(f'{random.randint(0, 1e6)}.html', 'w', encoding='utf-8') as f:
-    #     f.write(soup.prettify())
   
 
   
