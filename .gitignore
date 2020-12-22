@@ -10,3 +10,5 @@ client_secret.json
 *.part
 
 audios
+htmls
+__pychache__

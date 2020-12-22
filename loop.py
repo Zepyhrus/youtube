@@ -55,7 +55,7 @@ if __name__ == "__main__":
 
   blbl = BLBL(init_url, init_url)
   soup = BeautifulSoup(blbl.html, 'lxml')
-  links = ['https:' + _.get('href') for _ in soup.find_all('a') if 'href' in _.attrs and '/video/BV' in _.get('href')]
+  links = ['https:' + _.get('href') + '/' for _ in soup.find_all('a') if 'href' in _.attrs and '/video/BV' in _.get('href')]
 
   print(links)
 
@@ -63,30 +63,36 @@ if __name__ == "__main__":
     while len(links) >= MAX_SIZE:
       links.pop(0)  # empty
 
-    new_url = random.choice(links)
-    print(f'Ready to download: {new_url}...')
+    _idx = random.choice(range(len(links)))
 
     try:
+      new_url = links.pop(_idx)
+      print(f'Ready to download: {new_url}')
+
       with youtube_dl.YoutubeDL(YDL_OPTS) as ydl:
         ydl.download([new_url])
+      
+      bvid = new_url.split('video/')[-1].replace('/', '')
+      blbl = BLBL(new_url, new_url)
+      soup = BeautifulSoup(blbl.html, 'lxml')
+      with open(f'htmls\\{bvid}.html', 'w', encoding='utf-8') as f:
+        f.write(soup.prettify())
+
+      for _a in soup.find_all('a'):
+        if 'class' in _a.attrs and 'title' in _a.attrs['class']:
+          _href = _a.get('href')
+          _appex = _href.split('?')[0]
+
+          if 'video' not in _appex: continue
+
+          _url = host + _appex
+          _referer = host + _href
+
+          links.append(_url)
     except Exception as err:
       print(err)
 
-    blbl = BLBL(new_url, new_url)
-
-    soup = BeautifulSoup(blbl.html, 'lxml')
-
-    for _a in soup.find_all('a'):
-      if 'class' in _a.attrs and 'title' in _a.attrs['class']:
-        _href = _a.get('href')
-        _appex = _href.split('?')[0]
-
-        if 'video' not in _appex: continue
-
-        _url = host + _appex
-        _referer = host + _href
-
-        links.append(_url)
+    
 
 
 
