@@ -16,7 +16,8 @@ class BLBL:
   def __init__(self, base_url, base_referer):
     # modified by sherk
     self.base_url = base_url # '?from=search&seid=16370838628940058696'
-    self.cookie = "buvid3=914966CA-F8C4-45CD-9DCC-0B76C41F2890190961infoc; LIVE_BUVID=AUTO2215696355032554; rpdid=|(umk)YJuY~Y0J'ulYmYJllkm; im_notify_type_39940557=0; laboratory=1-1; CURRENT_QUALITY=116; finger=158939783; _uuid=1D09812C-B2A3-0468-F50C-EE7ACF3C6DD425628infoc; sid=htt4ie7h; CURRENT_FNVAL=80; blackside_state=1; PVID=1"
+    # self.cookie = "buvid3=914966CA-F8C4-45CD-9DCC-0B76C41F2890190961infoc; LIVE_BUVID=AUTO2215696355032554; rpdid=|(umk)YJuY~Y0J'ulYmYJllkm; im_notify_type_39940557=0; laboratory=1-1; CURRENT_QUALITY=116; finger=158939783; _uuid=1D09812C-B2A3-0468-F50C-EE7ACF3C6DD425628infoc; sid=htt4ie7h; CURRENT_FNVAL=80; blackside_state=1; PVID=1"
+    self.cookie = "buvid3=914966CA-F8C4-45CD-9DCC-0B76C41F2890190961infoc; LIVE_BUVID=AUTO2215696355032554; rpdid=|(umk)YJuY~Y0J'ulYmYJllkm; im_notify_type_39940557=0; CURRENT_QUALITY=116; _uuid=1D09812C-B2A3-0468-F50C-EE7ACF3C6DD425628infoc; sid=htt4ie7h; CURRENT_FNVAL=80; blackside_state=1; PVID=1; finger=158939783"
     self.referer = base_referer
     self.accept = "image/avif,image/webp,image/apng,image/*,*/*;q=0.8"
     self.accept_encoding = "gzip, deflate, br"
@@ -46,8 +47,27 @@ class BLBL:
 
 
 if __name__ == "__main__":
-  init_url = "https://www.bilibili.com/video/BV1PJ411Y7EG"
-  init_refer = "https://www.bilibili.com/video/BV1PJ411Y7EG?from=search&seid=16370838628940058696"
+  # # 访谈，最美中国字
+  # init_url = "https://www.bilibili.com/video/BV1ny4y1D7TU"
+  # init_refer = "https://www.bilibili.com/video/BV1ny4y1D7TU?spm_id_from=333.851.b_7265706f7274466972737431.8"
+
+  # # 游戏
+  # init_url = "https://www.bilibili.com/video/BV17i4y157au"
+  # init_refer = "https://www.bilibili.com/video/BV17i4y157au"
+
+  # # 鬼畜
+  # init_url = "https://www.bilibili.com/video/BV18a4y1a7hx"
+  # init_refer = "https://www.bilibili.com/video/BV18a4y1a7hx"
+
+  # # 恐怖游戏
+  # init_url = "https://www.bilibili.com/video/BV1vi4y157Pf"
+  # init_refer = "https://www.bilibili.com/video/BV1vi4y157Pf"
+
+  # 救命
+  init_url = "https://www.bilibili.com/video/BV1ka411A7HJ"
+  init_refer = "https://www.bilibili.com/video/BV1ka411A7HJ"
+
+
   host = 'https://www.bilibili.com'
   loop = True
 
@@ -56,11 +76,11 @@ if __name__ == "__main__":
   links = []
   max_size = 10000
   ydl_opts = {
-    'socket_timeout': 10,
+    'socket_timeout': 5,
     'sleep_interval': 1,
-    'max_sleep_interval': 10,
+    'max_sleep_interval': 2,
     'retries': 5,
-    'ratelimit': 1000000
+    'ratelimit': 10000000
   }
 
 
