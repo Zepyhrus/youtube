@@ -15,8 +15,8 @@ import youtube_dl
 class BLBL:
   def __init__(self, base_url, base_referer):
     # modified by sherk
-    self.base_url = base_url # '?from=search&seid=16370838628940058696'
-    self.cookie = "buvid3=914966CA-F8C4-45CD-9DCC-0B76C41F2890190961infoc; LIVE_BUVID=AUTO2215696355032554; rpdid=|(umk)YJuY~Y0J'ulYmYJllkm; im_notify_type_39940557=0; laboratory=1-1; CURRENT_QUALITY=116; finger=158939783; _uuid=1D09812C-B2A3-0468-F50C-EE7ACF3C6DD425628infoc; sid=htt4ie7h; CURRENT_FNVAL=80; blackside_state=1; PVID=1"
+    self.base_url = base_url
+    self.cookie = "buvid3=914966CA-F8C4-45CD-9DCC-0B76C41F2890190961infoc; LIVE_BUVID=AUTO2215696355032554; rpdid=|(umk)YJuY~Y0J'ulYmYJllkm; im_notify_type_39940557=0; CURRENT_QUALITY=116; _uuid=1D09812C-B2A3-0468-F50C-EE7ACF3C6DD425628infoc; sid=htt4ie7h; CURRENT_FNVAL=80; blackside_state=1; PVID=1; finger=158939783"
     self.referer = base_referer
     self.accept = "image/avif,image/webp,image/apng,image/*,*/*;q=0.8"
     self.accept_encoding = "gzip, deflate, br"
@@ -46,26 +46,43 @@ class BLBL:
 
 
 if __name__ == "__main__":
-  init_url = "https://www.bilibili.com/video/BV1PJ411Y7EG"
-  init_refer = "https://www.bilibili.com/video/BV1PJ411Y7EG?from=search&seid=16370838628940058696"
+  init_url = "https://www.bilibili.com"
+  init_refer = "https://www.bilibili.com"
   host = 'https://www.bilibili.com'
   loop = True
 
 
   blbl = BLBL(init_url, init_refer)
-  links = []
+  soup = BeautifulSoup(blbl.html, 'lxml')
+  links = ['https:' + _.get('href') for _ in soup.find_all('a') if 'href' in _.attrs and '/video/BV' in _.get('href')]
+
+  print(links)
   max_size = 10000
   ydl_opts = {
-    'socket_timeout': 10,
+    'socket_timeout': 5,
     'sleep_interval': 1,
-    'max_sleep_interval': 10,
+    'max_sleep_interval': 2,
     'retries': 5,
-    'ratelimit': 1000000
+    'ratelimit': 1e5,   # 100k for debug on hotspot
+    'min_filesize': 1e5,
+    'max_filesize': 4e9
   }
 
-
-  # loop here
   while loop:
+    while len(links) >= max_size:
+      links.pop(0)  # empty
+
+    new_url = random.choice(links)
+    print(f'Ready to download: {new_url}...')
+
+    try:
+      with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([new_url])
+    except Exception as err:
+      print(err)
+
+    blbl = BLBL(new_url, new_url)
+
     soup = BeautifulSoup(blbl.html, 'lxml')
 
     for _a in soup.find_all('a'):
@@ -78,25 +95,15 @@ if __name__ == "__main__":
         _url = host + _appex
         _referer = host + _href
 
-        links.append((_url, _referer))
+        links.append(_url)
 
-        while len(links) >= max_size:
-          links.pop()
 
-    # try:
-    new_url, new_refer = random.choice(links)
-    print(f'Ready to download: {new_url}')
-    
-    try:
-      with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([new_url])
-    except Exception as err:
-      print(err)
 
-    blbl = BLBL(new_url, new_refer)
-    # except:
-    #   with open(f'{random.randint(0, 1e6)}.html', 'w', encoding='utf-8') as f:
-    #     f.write(soup.prettify())
+
+
+
+  
+
   
 
   
